@@ -1,14 +1,43 @@
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
 
-from musker.models import Profile
+from musker.forms import MeepForm
+from musker.models import Profile, Meep
 
 
 def home(request):
-    context = {'title': 'Home'}
-    return render(request, 'home.html', context=context)
+    if request.user.is_authenticated:
+        form = MeepForm(request.POST or None)
+        if request.method == "POST":
+            if form.is_valid():
+                meep = form.save(commit=False)
+                meep.user = request.user
+                meep.save()
+                messages.success(request, ("Your Meep Has Posted!"))
+                return redirect('home')
+
+        meeps = Meep.objects.all().order_by('-created_at')
+        context = {
+            'title': 'Home',
+            'meeps': meeps,
+            'form': form,
+        }
+        return render(request, 'home.html', context=context)
+
+
+
+    else:
+
+        meeps = Meep.objects.all().order_by('-created_at')
+        context = {
+            'title': 'Home',
+            'meeps': meeps,
+        }
+        return render(request, 'home.html', context=context)
+
 
 
 def profile_list(request):
@@ -28,25 +57,44 @@ class ProfileDetailView(DetailView):
 def profile(request, pk):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user_id=pk)
-        context = {'profile': profile}
+        meeps = Meep.objects.filter(user_id=pk).order_by("-created_at")
+        context = {'profile': profile, 'meeps': meeps}
+
+        # Post Form logic
+        if request.method == "POST":
+            # Get current user
+            current_user_profile = request.user.profile
+            # Get form data
+            action = request.POST['follow']
+            # Decide to follow or unfollow
+            if action == "unfollow":
+                current_user_profile.follows.remove(profile)
+            elif action == "follow":
+                current_user_profile.follows.add(profile)
+            # Save the profile
+            current_user_profile.save()
+
         return render(request, 'profile.html', context=context)
     else:
         messages.success(request, ("You Must Be Logged In To View This Page..."))
         return redirect('home')
 
-        # meeps = Meep.objects.filter(user_id=pk).order_by("-created_at")
-        #
-        # # Post Form logic
-        # if request.method == "POST":
-        #     # Get current user
-        #     current_user_profile = request.user.profile
-        #     # Get form data
-        #     action = request.POST['follow']
-        #     # Decide to follow or unfollow
-        #     if action == "unfollow":
-        #         current_user_profile.follows.remove(profile)
-        #     elif action == "follow":
-        #         current_user_profile.follows.add(profile)
-        #     # Save the profile
-        #     current_user_profile.save()
+
+
+
+class MeepCreateView(CreateView):
+    model = Meep
+    template_name = 'meep_form.html'
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+
+
+class MeepListView(ListView):
+    model = Meep
+    template_name = 'meep_list.html'
+    extra_context = {'title': 'Meep List'}
+
+
+
+
 

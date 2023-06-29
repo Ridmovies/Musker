@@ -5,6 +5,26 @@
     {% if profile %}
 
         <h1>{{ profile.user.username }}'s Profile </h1>
+
+{#        Follow and Unfollow Button#}
+
+        <form method="post">
+            {% csrf_token %}
+            {% if profile in user.profile.follows.all %}
+                <button type="submit" class="btn btn-outline-danger" name="follow" value="unfollow">unfollow</button>
+            {% else %}
+                <button type="submit" class="btn btn-outline-success" name="follow" value="follow">follow</button>
+            {% endif %}
+
+
+        </form>
+
+        <br/><br/>
+
+
+
+
+        <br/><br/>
         <strong>Follows</strong><br/>
         {% for following in profile.follows.all %}
             <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a><br/>
@@ -16,8 +36,22 @@
             <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a><br/>
         {% endfor %}
 
-
     {% endif %}
+    <br/><br/>
+
+{#    User Meeps Block#}
+
+    {% if meeps %}
+        <h2>{{ profile.user.username }}'s Meeps</h2>
+        {% for meep in meeps %}
+            <div class="alert alert-dark" role="alert">
+                {{ meep }}
+            </div>
+        {% endfor %}
+    {% else %}
+        No meeps yet =(
+    {% endif %}
+
 
 
 {% endblock %}

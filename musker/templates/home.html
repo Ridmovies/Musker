@@ -2,6 +2,32 @@
 
 {% block content %}
 
-    Hello!!1223
+
+    <div class="container text-center">
+    <div class="row">
+        <div class="col-8">
+    <h1>{{ title }}</h1>
+
+
+    {% for meep in meeps %}
+        <div class="alert alert-dark" role="alert">
+            {{ meep }}
+        </div>
+    {% endfor %}
+        </div>
+
+
+{#    Add Meep Block#}
+
+        <div class="col-4">
+            {% if form %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+              <button type="submit" class="btn btn-secondary">Submit</button>
+            </form>
+            {% endif %}
+        </div>
+
 
 {% endblock %}

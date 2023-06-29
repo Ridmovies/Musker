@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>{{ title }}</h1>
+    <ul>
+    {% for meep in object_list %}
+        <li>{{ meep.user.username }} - {{ meep.created_at }}</li>
+    {% empty %}
+        <li>No articles yet.</li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
