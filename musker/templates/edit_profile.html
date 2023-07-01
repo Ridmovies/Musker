@@ -4,10 +4,12 @@
 
     <h1>{{ title }}</h1>
 
+    {{ current_user }}
+    
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-outline-success" name="follow" value="follow">follow</button>
+        <button type="submit" class="btn btn-outline-success">Save</button>
     </form>
 
 

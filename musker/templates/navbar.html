@@ -7,29 +7,18 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
+      {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'profile_list' %}">ProfileListView</a>
+            <strong><a class="nav-link" href="{% url 'profile' user.id %}">{{ request.user.username }}</a></strong>
         </li>
 
-        {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'profile' user.id %}">Profile</a>
+            <strong><a class="nav-link" href="{% url 'edit_profile' user.id %}">Edit Profile</a></strong>
         </li>
-        {% endif %}
 
         <li class="nav-item">
           <a class="nav-link" href="{% url 'add_meeps' %}">Add meep</a>
         </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'meep_list' %}">meep_list</a>
-        </li>
-
-      {% if user.is_authenticated %}
-
-          <li class="nav-item">
-                {{ request.user.username }}
-          </li>
 
           <li class="nav-item">
           <a class="nav-link" href="{% url 'logout' %}">logout</a>
@@ -41,10 +30,11 @@
           <a class="nav-link" href="{% url 'login' %}">Login</a>
         </li>
 
+          <li class="nav-item">
+          <a class="nav-link" href="{% url 'registration' %}">Reg</a>
+        </li>
+
       {% endif %}
-
-
-
 
       </ul>
       <form class="d-flex" role="search">
