@@ -1,10 +1,10 @@
 from django.contrib import messages
-from django.http import HttpResponse
+from django.contrib.auth import authenticate, logout, login
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 
-from musker.forms import MeepForm
+from musker.forms import MeepForm, UserLoginForm
 from musker.models import Profile, Meep
 
 
@@ -27,10 +27,7 @@ def home(request):
         }
         return render(request, 'home.html', context=context)
 
-
-
     else:
-
         meeps = Meep.objects.all().order_by('-created_at')
         context = {
             'title': 'Home',
@@ -80,8 +77,6 @@ def profile(request, pk):
         return redirect('home')
 
 
-
-
 class MeepCreateView(CreateView):
     model = Meep
     template_name = 'meep_form.html'
@@ -93,6 +88,42 @@ class MeepListView(ListView):
     model = Meep
     template_name = 'meep_list.html'
     extra_context = {'title': 'Meep List'}
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            print(request.POST)
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                messages.success(request, ("You Have Been Logged In!  Get MEEPING!"))
+                return redirect('home')
+            else:
+                messages.success(request, ("There was an error logging in. Please Try Again..."))
+                return redirect('login')
+
+        else:
+            messages.success(request, ("Login or password not correct"))
+            return redirect('login')
+
+    else:
+        form = UserLoginForm()
+        context = {
+            'title': 'Login',
+            'form': form,
+        }
+        return render(request, 'login_form.html', context=context)
+
+
+def user_logout(request):
+   logout(request)
+   return redirect('home')
+
 
 
 
