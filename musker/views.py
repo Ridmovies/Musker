@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 
-from musker.forms import MeepForm, UserRegistrationForm, UserProfileUpdateForm
+from musker.forms import MeepForm, UserRegistrationForm, UserProfileUpdateForm, ProfilePicForm
 from musker.models import Profile, Meep
 
 
@@ -153,43 +153,47 @@ class UserProfileUpdateView(UpdateView):
     success_url = reverse_lazy('home')
 
 
-# def profile(request):
-#     if request.method == 'POST':
-#         form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('index')
-#         else:
-#             print(form.errors)
-#     else:
-#         form = UserProfileForm(instance=request.user)
-#
-#     context = {
-#         'form': form,
-#         'title': 'Store - Profile',
-#         'baskets': Basket.objects.filter(user=request.user)
-#     }
-#     return render(request, template_name='users/profile.html', context=context)
+def edit_user_profile(request):
+    if request.method == 'POST':
+        form = UserProfileUpdateForm(data=request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your Profile Has Been Updated!")
+            return redirect('home')
+        else:
+            print(form.errors)
+    else:
+        form = UserProfileUpdateForm(instance=request.user)
+
+    context = {
+        'form': form,
+        'title': 'Store - Profile',
+    }
+    return render(request, template_name='edit_profile.html', context=context)
 
 
-# def edit_user_profile(request):
-#     if request.user.is_authenticated:
-#         current_user = User.objects.get(id=request.user.id)
-#         profile_user = Profile.objects.get(user__id=request.user.id)
-#         # Get Forms
-#         user_form = UserRegistrationForm(request.POST or None, request.FILES or None, instance=current_user)
-#         profile_form = UserRegistrationForm(request.POST or None, request.FILES or None, instance=profile_user)
-#         if user_form.is_valid() and profile_form.is_valid():
-#             user_form.save()
-#             profile_form.save()
-#
-#             login(request, current_user)
-#             messages.success(request, "Your Profile Has Been Updated!")
-#             return redirect('home')
-#
-#         return render(request, "edit_profile.html", {'user_form': user_form, 'profile_form': profile_form})
-#     else:
-#         messages.success(request, "You Must Be Logged In To View That Page...")
-#         return redirect('home')
+# Combining two forms into one
+def update_user(request):
+    if request.user.is_authenticated:
+        # current_user = User.objects.get(id=request.user.id)
+        # profile_user = Profile.objects.get(user__id=request.user.id)
+        # Get Forms
+        user_form = UserProfileUpdateForm(request.POST or None, request.FILES or None, instance=request.user)
+        profile_form = ProfilePicForm(request.POST or None, request.FILES or None, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
 
+            # login(request, current_user)
+            messages.success(request, "Your Profile Has Been Updated!")
+            return redirect('home')
 
+        context = {
+            'title': 'Edit Profile',
+            'user_form': user_form,
+            'profile_form': profile_form
+        }
+        return render(request, "edit_profile.html", context)
+    else:
+        messages.success(request, "You Must Be Logged In To View That Page...")
+        return redirect('home')

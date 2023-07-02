@@ -1,7 +1,7 @@
 from django.urls import path
 
 from musker.views import home, profile_list, profile, MeepCreateView, MeepListView, user_login, user_logout, \
-    user_registration, UserProfileUpdateView
+    user_registration, UserProfileUpdateView, edit_user_profile, update_user
 
 urlpatterns = [
     path("", home, name='home'),
@@ -13,7 +13,8 @@ urlpatterns = [
     path("login/", user_login, name='login'),
     path("logout/", user_logout, name='logout'),
     path("registration/", user_registration, name='registration'),
-    path("edit_profile/<int:pk>", UserProfileUpdateView.as_view(), name='edit_profile'),
+    # path("edit_profile/<int:pk>", UserProfileUpdateView.as_view(), name='edit_profile'),
     # path("edit_profile/", edit_user_profile, name='edit_profile'),
+    path("edit_profile/", update_user, name='edit_profile'),
 
 ]

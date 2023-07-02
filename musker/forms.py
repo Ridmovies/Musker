@@ -2,7 +2,27 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from musker.models import Meep
+from musker.models import Meep, Profile
+
+
+# Profile Extras Form
+class ProfilePicForm(forms.ModelForm):
+    profile_image = forms.ImageField(label="Profile Picture")
+    # profile_bio = forms.CharField(label="Profile Bio",
+    #                               widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Profile Bio'}))
+    # homepage_link = forms.CharField(label="", widget=forms.TextInput(
+    #     attrs={'class': 'form-control', 'placeholder': 'Website Link'}))
+    # facebook_link = forms.CharField(label="", widget=forms.TextInput(
+    #     attrs={'class': 'form-control', 'placeholder': 'Facebook Link'}))
+    # instagram_link = forms.CharField(label="", widget=forms.TextInput(
+    #     attrs={'class': 'form-control', 'placeholder': 'Instagram Link'}))
+    # linkedin_link = forms.CharField(label="", widget=forms.TextInput(
+    #     attrs={'class': 'form-control', 'placeholder': 'Linkedin Link'}))
+
+    class Meta:
+        model = Profile
+        fields = ['profile_image']
+        # fields = ('profile_image', 'profile_bio', 'homepage_link', 'facebook_link', 'instagram_link', 'linkedin_link',)
 
 
 class MeepForm(forms.ModelForm):
