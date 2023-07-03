@@ -32,6 +32,19 @@
                 <small class="text-muted">
                 ({{ meep.created_at}}) By
                 @{{ meep.user.username }}
+                <br>
+                - {{ meep.number_of_likes }} Likes
+                    <a href="{% url 'meep_like' meep.id %}">
+                        {% if user in meep.likes.all %}
+{#                            <i class="fa-sharp fa-solid fa-heart"></i>#}
+                            unlike
+                        {% else %}
+{#                            <i class="fa-regular fa-heart"></i>#}
+                            like
+                        {% endif %}
+                    </a>
+                    &nbsp;
+                    <a href="{% url 'meep_show' meep.id %}">Share</a>
                 </small>
             </div>
 
@@ -51,9 +64,37 @@
             <div class="col-4">
                 <br/><br/><br/>
 				{% if profile.profile_image %}
-				<img src="{{ profile.profile_image.url }}" class="rounded-circle" width="200" height="200">
-				<br/><br/>
+                    <img src="{{ profile.profile_image.url }}" class="rounded-circle" width="200" height="200">
+                    <br/><br/>
 				{% endif %}
+
+                {% if profile.homepage_link %}
+                    <a href="{{ profile.homepage_link }}" target="new">
+                                <i class="fa-solid fa-link" style="color:gray"></i></a>
+                                {% endif %}
+                                &nbsp;&nbsp;
+                                {% if profile.facebook_link %}
+                    <a href="{{ profile.facebook_link }}" target="new">
+                        <i class="fa-brands fa-facebook-f" style="color:gray"></i></a>
+                                {% endif %}
+                                &nbsp;&nbsp;
+                                {% if profile.instagram_link %}
+                    <a href="{{ profile.instagram_link }}" target="new">
+                        <i class="fa-brands fa-instagram" style="color:gray"></i></a>
+                                {% endif %}
+                                &nbsp;&nbsp;
+                                {% if profile.linkedin_link %}
+                    <a href="{{ profile.linkedin_link }}" target="new">
+                        <i class="fa-brands fa-linkedin-in" style="color:gray"></i></a>
+                                {% endif %}
+                <br/><br/>
+
+                {% if profile.profile_bio %}
+                    <p align="justify">
+                        {{profile.profile_bio }}
+                    </p>
+                {% endif %}
+                <br/><br/>
 
                         {#        Follow and Unfollow Button#}
         <form method="post">
@@ -75,7 +116,7 @@
         <br/><br/>
         <strong>Followed By</strong><br/>
         {% for following in profile.followed_by.all %}
-            <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a><br/>
+            <a href="{% url 'profile' following.user.id %}"> @{{ following }} </a><br/>
         {% endfor %}
 
     {% endif %}
@@ -85,93 +126,6 @@
             </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-{#    {% if profile %}#}
-{##}
-{#        	<div class="container text-center">#}
-{#		<div class="row">#}
-{#			<div class="col-8">#}
-{##}
-{#        <h1>{{ profile.user.username }}'s Profile </h1>#}
-{#        {% if profile.profile_image %}#}
-{#            <img src="{{ profile.profile_image.url }}" alt="..." height="200" width="200" class="rounded-circle">#}
-{#        {% endif %}#}
-{##}
-{##}
-        {#    User Meeps Block#}
-{#    {% if meeps %}#}
-{#        <h2>{{ profile.user.username }}'s Meeps</h2>#}
-{#        {% for meep in meeps %}#}
-{##}
-{#            <div class="alert alert-dark" role="alert">#}
-{#    <div class="container">#}
-{#		<div class="row">#}
-{#			<div class="col-1">#}
-{#				{% if profile.profile_image %}#}
-{#				<img src="{{ profile.profile_image.url }}" width=50 height=50 class="rounded-circle" alt="{{ profile.user.username }}">#}
-{##}
-{#				{% else %}#}
-{#				<img src="{% static 'img/default_avatar.jpg' %}" width=50 height=50 class="rounded-circle" alt="{{ profile.user.username }}">#}
-{#				{% endif %}#}
-{#            </div>#}
-{##}
-{#        <div class="col-11">#}
-{##}
-{#                {{ meep }}#}
-{#        </div>#}
-{#        </div>#}
-{#        </div>#}
-{#            </div>#}
-{##}
-{#        {% endfor %}#}
-{#    {% else %}#}
-{#        No meeps yet =(#}
-{#    {% endif %}#}
-{#           </div>#}
-{##}
-{#            </div>#}
-{##}
-{##}
-{##}
-{#        Follow and Unfollow Button#}
-{##}
-{#        <form method="post">#}
-{#            {% csrf_token %}#}
-{#            {% if profile in user.profile.follows.all %}#}
-{#                <button type="submit" class="btn btn-outline-danger" name="follow" value="unfollow">unfollow</button>#}
-{#            {% else %}#}
-{#                <button type="submit" class="btn btn-outline-success" name="follow" value="follow">follow</button>#}
-{#            {% endif %}#}
-{##}
-{##}
-{#        </form>#}
-{##}
-{#        <br/><br/>#}
-{#        <br/><br/>#}
-{#        <strong>Follows</strong><br/>#}
-{#        {% for following in profile.follows.all %}#}
-{#            <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a><br/>#}
-{#        {% endfor %}#}
-{##}
-{#        <br/><br/>#}
-{#        <strong>Followed By</strong><br/>#}
-{#        {% for following in profile.followed_by.all %}#}
-{#            <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a><br/>#}
-{#        {% endfor %}#}
-{##}
-{#    {% endif %}#}
-{#    <br/><br/>#}
-
 
 
 

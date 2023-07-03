@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 
@@ -196,4 +196,23 @@ def update_user(request):
         return render(request, "edit_profile.html", context)
     else:
         messages.success(request, "You Must Be Logged In To View That Page...")
+        return redirect('home')
+
+
+def meep_like(request, pk):
+    meep = get_object_or_404(Meep, id=pk)
+    if meep.likes.filter(id=request.user.id):
+        meep.likes.remove(request.user)
+    else:
+        meep.likes.add(request.user)
+
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+def meep_show(request, pk):
+    meep = get_object_or_404(Meep, id=pk)
+    if meep:
+        return render(request, "show_meep.html", {'meep':meep})
+    else:
+        messages.success(request, ("That Meep Does Not Exist..."))
         return redirect('home')
