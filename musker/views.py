@@ -47,6 +47,30 @@ def profile_list(request):
         return redirect('home')
 
 
+def follows_list(request, pk):
+    if request.user.is_authenticated:
+        current_profile = Profile.objects.get(user_id=pk)
+        follows_profiles = current_profile.follows.all()
+        context = {"object_list": follows_profiles,
+                   'title': 'Follows List'}
+        return render(request, 'follows_list.html', context)
+    else:
+        messages.success(request, "You Must Be Logged In To View This Page...")
+        return redirect('home')
+
+
+def follow_by_list(request, pk):
+    if request.user.is_authenticated:
+        current_profile = Profile.objects.get(user_id=pk)
+        follows_profiles = current_profile.followed_by.all()
+        context = {"object_list": follows_profiles,
+                   'title': 'follow_by_list'}
+        return render(request, 'follow_by_list.html', context)
+    else:
+        messages.success(request, "You Must Be Logged In To View This Page...")
+        return redirect('home')
+
+
 class ProfileDetailView(DetailView):
     model = Profile
     template_name = "profile.html"
@@ -76,6 +100,16 @@ def profile(request, pk):
     else:
         messages.success(request, "You Must Be Logged In To View This Page...")
         return redirect('home')
+
+
+def unfollow(request, pk):
+    if request.user.is_authenticated:
+        unfollow_profile = Profile.objects.get(user_id=pk)
+        current_user_profile = request.user.profile
+        # if request.method == "POST":
+        current_user_profile.follows.remove(unfollow_profile)
+
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 class MeepCreateView(CreateView):

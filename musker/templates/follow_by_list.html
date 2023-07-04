@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    {% if title %}
+        <h1>{{ title }}</h1>
+    {% else %}
+        <h1>Musker</h1>
+    {% endif %}
+
+    <ul>
+    {% if object_list %}
+        {% for profile in object_list %}
+
+            <div class="card mb-3" style="max-width: 540px;">
+              <div class="row g-0">
+                <div class="col-md-4">
+                {% if profile.profile_image %}
+				    <img src="{{ profile.profile_image.url }}" width=100 class="img-fluid rounded-start" alt="{{ profile.user.username }}">
+				{% else %}
+				    <img src="{% static 'img/default_avatar.jpg' %}" width=100 class="img-fluid rounded-start" alt="{{ profile.user.username }}">
+				{% endif %}
+{#                  <img src="{% static 'img/default_avatar.jpg' %}" class="img-fluid rounded-start"#}
+{#                       alt="..."  width="100px">#}
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="{% url 'profile' profile.user.pk %}">{{ profile.user.username }}</a> </h5>
+                    <p class="card-text">@{{ profile.user.username|lower }}</p>
+                    <p class="card-text"><small class="text-body-secondary">{{ profile.date_modified }}</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        {% endfor %}
+    {% endif %}
+    </ul>
+
+{% endblock %}

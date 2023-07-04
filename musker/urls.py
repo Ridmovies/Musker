@@ -1,13 +1,17 @@
 from django.urls import path
 
 from musker.views import home, profile_list, profile, MeepCreateView, MeepListView, user_login, user_logout, \
-    user_registration, UserProfileUpdateView, edit_user_profile, update_user, meep_like, meep_show
+    user_registration, UserProfileUpdateView, edit_user_profile, update_user, meep_like, meep_show, unfollow, \
+    follows_list, follow_by_list
 
 urlpatterns = [
     path("", home, name='home'),
     path("profile_list/", profile_list, name='profile_list'),
+    path("follows_list/<int:pk>/", follows_list, name='follows_list'),
+    path("follow_by_list/<int:pk>/", follow_by_list, name='follow_by_list'),
     # path("profile/<int:pk>/", ProfileDetailView.as_view(), name='profile'),
     path("profile/<int:pk>/", profile, name='profile'),
+    path("unfollow/<int:pk>/", unfollow, name='unfollow'),
     path("add_meeps/", MeepCreateView.as_view(), name='add_meeps'),
     path("meep_list/", MeepListView.as_view(), name='meep_list'),
     path("login/", user_login, name='login'),

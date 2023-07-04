@@ -53,7 +53,6 @@
     </div>
 </div>
 
-
                         {% endfor %}
                     {% endif %}
 
@@ -96,7 +95,7 @@
                 {% endif %}
                 <br/><br/>
 
-                        {#        Follow and Unfollow Button#}
+        {# Follow and Unfollow Button#}
         <form method="post">
             {% csrf_token %}
             {% if profile in user.profile.follows.all %}
@@ -109,15 +108,29 @@
         <br/><br/>
 
         <strong>Follows</strong><br/>
-        {% for following in profile.follows.all %}
-            <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a><br/>
+        {% for following in profile.follows.all|slice:3 %}
+            <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a>
+            <a href="{% url 'unfollow' following.user.id %}">[unfollow]</a>
+            <br/>
         {% endfor %}
+        <br>
+
+        {% if profile.follows.all.count > 3 %}
+            <a href="{% url 'follows_list' user.id %}">[show all]</a>
+        {% endif %}
+
 
         <br/><br/>
         <strong>Followed By</strong><br/>
-        {% for following in profile.followed_by.all %}
-            <a href="{% url 'profile' following.user.id %}"> @{{ following }} </a><br/>
+        {% for following in profile.followed_by.all|slice:3 %}
+            <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a>
+            <br/>
         {% endfor %}
+        <br>
+
+        {% if profile.followed_by.all.count > 3 %}
+            <a href="{% url 'follow_by_list' user.id %}">[show all]</a>
+        {% endif %}
 
     {% endif %}
     <br/><br/>
