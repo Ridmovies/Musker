@@ -35,6 +35,14 @@
                                         {% else %}
                                             <a href="{% url 'meep_like' meep.pk %}">Like!</a>
                                         {% endif %}
+
+                                        {% if user.id == meep.user.id %}
+                                            &nbsp;<a href="{% url 'delete_meep' meep.id %}">[delete]</a>
+                                        {% endif %}
+
+                                        {% if user.id == meep.user.id %}
+                                            &nbsp;<a href="{% url 'edit_meep' meep.id %}">[edit]</a>
+                                        {% endif %}
                                     </small>
                                 </div>
                             </div>

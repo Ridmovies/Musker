@@ -246,7 +246,34 @@ def meep_like(request, pk):
 def meep_show(request, pk):
     meep = get_object_or_404(Meep, id=pk)
     if meep:
-        return render(request, "show_meep.html", {'meep':meep})
+        return render(request, "show_meep.html", {'meep': meep})
     else:
-        messages.success(request, ("That Meep Does Not Exist..."))
+        messages.success(request, "That Meep Does Not Exist...")
         return redirect('home')
+
+
+def delete_meep(request, pk):
+    meep = get_object_or_404(Meep, id=pk)
+    if meep:
+        Meep.objects.filter(id=pk).delete()
+        return redirect(request.META.get('HTTP_REFERER'))
+    else:
+        messages.success(request, "That Meep Does Not Exist...")
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
+def edit_meep(request, pk):
+    if request.method == 'POST':
+        form = MeepForm(request.POST or None, request.FILES or None, instance=Meep.objects.get(id=pk))
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your Meep Has Been Updated!")
+            return redirect('home')
+    else:
+        form = MeepForm(instance=Meep.objects.get(id=pk))
+        context = {
+            'title': 'Edit Meep',
+            'form': form,
+        }
+        return render(request, template_name='edit_meep.html', context=context)
+

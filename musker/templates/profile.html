@@ -37,14 +37,22 @@
                     <a href="{% url 'meep_like' meep.id %}">
                         {% if user in meep.likes.all %}
 {#                            <i class="fa-sharp fa-solid fa-heart"></i>#}
-                            unlike
+                            [unlike]
                         {% else %}
 {#                            <i class="fa-regular fa-heart"></i>#}
-                            like
+                            [like]
                         {% endif %}
                     </a>
                     &nbsp;
-                    <a href="{% url 'meep_show' meep.id %}">Share</a>
+                    <a href="{% url 'meep_show' meep.id %}">[share]</a>
+
+                    {% if user.id == meep.user.id %}
+                        &nbsp;<a href="{% url 'delete_meep' meep.id %}">[delete]</a>
+                    {% endif %}
+
+                    {% if user.id == meep.user.id %}
+                        &nbsp;<a href="{% url 'edit_meep' meep.id %}">[edit]</a>
+                    {% endif %}
                 </small>
             </div>
 

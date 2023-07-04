@@ -8,12 +8,9 @@
         <h1>Musker</h1>
     {% endif %}
 
-    {{ current_user }}
-    
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ user_form.as_p }}
-        {{ profile_form.as_p }}
+        {{ form.as_p }}
         <button type="submit" class="btn btn-outline-success">Save</button>
     </form>
 
