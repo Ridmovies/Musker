@@ -6,6 +6,7 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('musker.urls')),
+    path('direct/', include('direct.urls')),
 ]
 
 if settings.DEBUG:
