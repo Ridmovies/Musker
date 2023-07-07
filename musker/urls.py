@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import path
 
 from musker.views import home, profile_list, profile, MeepCreateView, MeepListView, user_login, user_logout, \
@@ -12,7 +13,7 @@ urlpatterns = [
     # path("profile/<int:pk>/", ProfileDetailView.as_view(), name='profile'),
     path("profile/<int:pk>/", profile, name='profile'),
     path("unfollow/<int:pk>/", unfollow, name='unfollow'),
-    path("add_meeps/", MeepCreateView.as_view(), name='add_meeps'),
+    path("add_meeps/", login_required(MeepCreateView.as_view()), name='add_meeps'),
     path("meep_list/", MeepListView.as_view(), name='meep_list'),
     path("login/", user_login, name='login'),
     path("logout/", user_logout, name='logout'),

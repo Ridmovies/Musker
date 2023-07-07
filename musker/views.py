@@ -1,10 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 
 from direct.models import Message
@@ -44,7 +45,11 @@ def home(request):
 def profile_list(request):
     if request.user.is_authenticated:
         profiles = Profile.objects.exclude(user=request.user)
-        return render(request, 'profile_list.html', {"object_list": profiles})
+        context = {
+            "object_list": profiles,
+            'title': 'Profiles',
+        }
+        return render(request, 'profile_list.html', context=context)
     else:
         messages.success(request, "You Must Be Logged In To View This Page...")
         return redirect('home')
@@ -120,6 +125,7 @@ class MeepCreateView(CreateView):
     template_name = 'meep_form.html'
     fields = ['body']
     success_url = reverse_lazy('home')
+    extra_context = {'title': 'Add Meep'}
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -240,14 +246,17 @@ def update_user(request):
         return redirect('home')
 
 
+@login_required
 def meep_like(request, pk):
     meep = get_object_or_404(Meep, id=pk)
     if meep.likes.filter(id=request.user.id):
         meep.likes.remove(request.user)
+
     else:
         meep.likes.add(request.user)
 
-    return redirect(request.META.get('HTTP_REFERER'))
+    return redirect(reverse('home'))
+    # return redirect(request.META.get('HTTP_REFERER'))  ### Don't work
 
 
 def meep_show(request, pk):
