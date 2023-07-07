@@ -2,10 +2,12 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 
+from direct.models import Message
 from musker.forms import MeepForm, UserRegistrationForm, UserProfileUpdateForm, ProfilePicForm
 from musker.models import Profile, Meep
 
@@ -26,6 +28,7 @@ def home(request):
             'title': 'Home',
             'meeps': meeps,
             'form': form,
+            # 'count_not_read_messages': Message.objects.filter(Q(is_read=False) & Q(recipient__id=request.user.id)).count()
         }
         return render(request, 'home.html', context=context)
 
@@ -115,8 +118,12 @@ def unfollow(request, pk):
 class MeepCreateView(CreateView):
     model = Meep
     template_name = 'meep_form.html'
-    fields = '__all__'
+    fields = ['body']
     success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 class MeepListView(ListView):
@@ -276,4 +283,5 @@ def edit_meep(request, pk):
             'form': form,
         }
         return render(request, template_name='edit_meep.html', context=context)
+
 

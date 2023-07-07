@@ -9,19 +9,42 @@
     {% endif %}
 
 
+    {# New messages block #}
+    {% if user.profile.new_messages %}
+        You have new messages!
+    {% else %}
+        you have no new messages
+    {% endif %}
+
+</br></br>
+
+    <h4>Don't read messages:</h4>  </br>
+
+
     {% for direct in directs %}
+        {% if not direct.is_read %}
         {{ direct.sender }} -
         {{ direct.recipient }} -
         {{ direct.body }}
+        <a href="{% url 'message_read' direct.id %}">[read]</a>
+        <a href="{% url 'message_delete' direct.id %}">[delete]</a>
         </br>
+        {% endif %}
     {% endfor %}
 
+    </br></br>
 
-{#    <form method="post">#}
-{#        {% csrf_token %}#}
-{#        {{ form.as_p }}#}
-{#        <button type="submit" class="btn btn-outline-success" name="follow" value="follow">follow</button>#}
-{#    </form>#}
+    <h4>Read messages:</h4></br>
+    {% for direct in directs %}
+        {% if direct.is_read %}
+        {{ direct.sender }} -
+        {{ direct.recipient }} -
+        {{ direct.body }}
+            <a href="{% url 'message_delete' direct.id %}">[delete]</a>
+        </br>
+        {% endif %}
+    {% endfor %}
+
 
 
 {% endblock %}

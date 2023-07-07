@@ -18,6 +18,7 @@ class Profile(models.Model):
     facebook_link = models.CharField(null=True, blank=True, max_length=100)
     instagram_link = models.CharField(null=True, blank=True, max_length=100)
     linkedin_link = models.CharField(null=True, blank=True, max_length=100)
+    new_messages = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
@@ -56,3 +57,4 @@ class Meep(models.Model):
             f"({self.created_at:%Y-%m-%d %H:%M}): "
             f"{self.body}..."
             )
+
