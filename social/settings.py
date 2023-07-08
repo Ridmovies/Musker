@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'musker',
     'direct',
+    'chat',
 ]
 
 MIDDLEWARE = [

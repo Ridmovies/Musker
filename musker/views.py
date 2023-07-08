@@ -142,7 +142,6 @@ def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            print(request.POST)
             username = request.POST['username']
             password = request.POST['password']
             user = authenticate(username=username, password=password)
@@ -182,6 +181,9 @@ def user_registration(request):
             login(request, user)
             messages.success(request, "You have successfully registered! Wellcome!")
             return redirect('home')
+        else:
+            messages.error(request, form.errors)
+            return redirect('registration')
     else:
         form = UserRegistrationForm()
         context = {
@@ -268,29 +270,39 @@ def meep_show(request, pk):
         return redirect('home')
 
 
+@login_required
 def delete_meep(request, pk):
     meep = get_object_or_404(Meep, id=pk)
-    if meep:
-        Meep.objects.filter(id=pk).delete()
-        return redirect(request.META.get('HTTP_REFERER'))
+    if meep.user == request.user:
+        if meep:
+            Meep.objects.filter(id=pk).delete()
+            messages.success(request, "Meep deleted successfully.")
     else:
-        messages.success(request, "That Meep Does Not Exist...")
-        return redirect(request.META.get('HTTP_REFERER'))
+        messages.success(request, "You are trying to delete someone else's Meep.")
+
+    return redirect(reverse('home'))
+        # return redirect(request.META.get('HTTP_REFERER'))
 
 
+@login_required
 def edit_meep(request, pk):
-    if request.method == 'POST':
-        form = MeepForm(request.POST or None, request.FILES or None, instance=Meep.objects.get(id=pk))
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Your Meep Has Been Updated!")
-            return redirect('home')
+    if get_object_or_404(Meep, id=pk).user == request.user:
+        if request.method == 'POST':
+            form = MeepForm(request.POST or None, request.FILES or None, instance=Meep.objects.get(id=pk))
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Your Meep Has Been Updated!")
+                return redirect('home')
+        else:
+            form = MeepForm(instance=Meep.objects.get(id=pk))
+            context = {
+                'title': 'Edit Meep',
+                'form': form,
+            }
+            return render(request, template_name='edit_meep.html', context=context)
     else:
-        form = MeepForm(instance=Meep.objects.get(id=pk))
-        context = {
-            'title': 'Edit Meep',
-            'form': form,
-        }
-        return render(request, template_name='edit_meep.html', context=context)
+        messages.success(request, "You do not have access rights")
+        return redirect('home')
+
 
 

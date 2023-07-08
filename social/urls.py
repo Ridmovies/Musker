@@ -7,6 +7,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('musker.urls')),
     path('direct/', include('direct.urls')),
+    path('chat/', include('chat.urls')),
 ]
 
 if settings.DEBUG:
