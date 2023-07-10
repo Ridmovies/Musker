@@ -25,11 +25,13 @@
                                 </div>
 
 			                    <div class="col-11">
-                                    {{ meep.body }}<br/>
+                                    {{ meep.body }}<br/><br/>
                                     <small class="text-muted">
+                                    {{ meep.category }}
                                     ({{ meep.created_at}}) By
-                                    @{{ meep.user.username }}
+                                    <a href="{% url 'profile' meep.user.id %}"> {{ meep.user.username }}</a>
                                         - {{ meep.number_of_likes }} Likes
+                                    {% if user.is_authenticated %}
                                         {% if request.user in meep.likes.all %}
                                             <a href="{% url 'meep_like' meep.pk %}">Unlike</a>
                                         {% else %}
@@ -43,6 +45,7 @@
                                         {% if user.id == meep.user.id %}
                                             &nbsp;<a href="{% url 'edit_meep' meep.id %}">[edit]</a>
                                         {% endif %}
+                                    {% endif %}
                                     </small>
                                 </div>
                             </div>
@@ -52,16 +55,16 @@
         </div>
 
 {#    Add Meep Block#}
-            <div class="col-4">
-                <br><br><br>
-                {% if form %}
-                <form method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-secondary">Submit</button>
-                </form>
-                {% endif %}
-            </div>
+{#            <div class="col-4">#}
+{#                <br><br><br>#}
+{#                {% if form %}#}
+{#                <form method="post">#}
+{#                    {% csrf_token %}#}
+{#                    {{ form.as_p }}#}
+{#                    <button type="submit" class="btn btn-secondary">Submit</button>#}
+{#                </form>#}
+{#                {% endif %}#}
+{#            </div>#}
         </div>
     </div>
 

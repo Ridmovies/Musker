@@ -38,7 +38,7 @@ class MeepForm(forms.ModelForm):
 
     class Meta:
         model = Meep
-        fields = ['body']
+        fields = ['category', 'body']
 
 
 class UserRegistrationForm(UserCreationForm):

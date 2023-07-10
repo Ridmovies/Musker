@@ -18,6 +18,7 @@ def direct(request, pk):
         context = {
             'directs': directs,
             'form': form,
+            'title': 'Directs'
         }
         return render(request, 'direct.html', context)
     else:

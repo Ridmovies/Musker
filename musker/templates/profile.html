@@ -28,12 +28,12 @@
             </div>
 
             <div class="col-11">
-                {{ meep.body }}<br/>
-                <small class="text-muted">
-                ({{ meep.created_at}}) By
-                @{{ meep.user.username }}
-                <br>
-                - {{ meep.number_of_likes }} Likes
+                {{ meep.body }}<br/><br/>
+                                    <small class="text-muted">
+                                    {{ meep.category }}
+                                    ({{ meep.created_at}}) By
+                                    <a href="{% url 'profile' meep.user.id %}"> {{ meep.user.username }}</a>
+                                        - {{ meep.number_of_likes }} Likes
                     <a href="{% url 'meep_like' meep.id %}">
                         {% if user in meep.likes.all %}
 {#                            <i class="fa-sharp fa-solid fa-heart"></i>#}

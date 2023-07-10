@@ -13,10 +13,6 @@
       {% if user.is_authenticated %}
 
         <li class="nav-item">
-            <strong><a class="nav-link" href="{% url 'edit_profile' %}">Edit Profile</a></strong>
-        </li>
-
-        <li class="nav-item">
           <a class="nav-link" href="{% url 'add_meeps' %}">Add meep</a>
         </li>
 
@@ -25,11 +21,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">logout</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'profile_list' %}">profile list</a>
+          <a class="nav-link" href="{% url 'profile_list' %}">Profile List</a>
         </li>
 
       {% else %}
@@ -56,16 +48,35 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'direct' user.id %}">
-                        {% if user.profile.new_messages %}
-                            Direct NM
-                        {% else %}
-                            Direct
-                        {% endif %}
-                    </a>
-                </li>
 
+{# DROPDOWN BUTTON #}
+
+                <div class="dropdown">
+                  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Account
+                  </a>
+
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'profile' user.id %}">Profile</a></li>
+
+
+                      <li>
+                        <a class="dropdown-item" href="{% url 'direct' user.id %}">
+                            {% if user.profile.new_messages %}
+                                Direct NM
+                            {% else %}
+                                My Direct
+                            {% endif %}
+                        </a>
+                     </li>
+
+                    <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>
+
+                      <li>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                      </li>
+                  </ul>
+                </div>
 
             </ul>
         {% else %}

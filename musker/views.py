@@ -3,12 +3,11 @@ from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 
-from direct.models import Message
+
 from musker.forms import MeepForm, UserRegistrationForm, UserProfileUpdateForm, ProfilePicForm
 from musker.models import Profile, Meep
 
@@ -122,8 +121,9 @@ def unfollow(request, pk):
 
 class MeepCreateView(CreateView):
     model = Meep
+    form_class = MeepForm
     template_name = 'meep_form.html'
-    fields = ['body']
+    # fields = ['body']
     success_url = reverse_lazy('home')
     extra_context = {'title': 'Add Meep'}
 
@@ -257,8 +257,8 @@ def meep_like(request, pk):
     else:
         meep.likes.add(request.user)
 
-    return redirect(reverse('home'))
-    # return redirect(request.META.get('HTTP_REFERER'))  ### Don't work
+    # return redirect(reverse('home'))
+    return redirect(request.META.get('HTTP_REFERER'))  # Don't work on tests and url
 
 
 def meep_show(request, pk):

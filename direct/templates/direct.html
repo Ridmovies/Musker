@@ -23,11 +23,15 @@
 
     {% for direct in directs %}
         {% if not direct.is_read %}
-        {{ direct.sender }} -
-        {{ direct.recipient }} -
-        {{ direct.body }}
-        <a href="{% url 'message_read' direct.id %}">[read]</a>
+            <small>
+        from: {{ direct.sender }}
+        to: {{ direct.recipient }}
+        {{ direct.date }}
+                <a href="{% url 'message_read' direct.id %}">[read]</a>
         <a href="{% url 'message_delete' direct.id %}">[delete]</a>
+            </small>
+            <br>
+        {{ direct.body }}
         </br>
         {% endif %}
     {% endfor %}
@@ -37,11 +41,16 @@
     <h4>Read messages:</h4></br>
     {% for direct in directs %}
         {% if direct.is_read %}
-        {{ direct.sender }} -
-        {{ direct.recipient }} -
-        {{ direct.body }}
+            <small>
+        from: {{ direct.sender }}
+        to: {{ direct.recipient }}
+        {{ direct.date }}
             <a href="{% url 'message_delete' direct.id %}">[delete]</a>
-        </br>
+            </small>
+            <br>
+        {{ direct.body }}
+
+        </br></br>
         {% endif %}
     {% endfor %}
 

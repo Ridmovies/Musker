@@ -3,7 +3,13 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
 
-# Create A User Profile Model
+class Category(models.Model):
+    title = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.title
+
+
 class Profile(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     follows = models.ManyToManyField(to='self',
@@ -46,6 +52,7 @@ class Meep(models.Model):
     body = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name="meep_like", blank=True)
+    category = models.ForeignKey(to=Category, default=1, on_delete=models.CASCADE)
 
     # Keep track or count of likes
     def number_of_likes(self):
