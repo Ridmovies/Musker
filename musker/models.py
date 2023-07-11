@@ -53,6 +53,7 @@ class Meep(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name="meep_like", blank=True)
     category = models.ForeignKey(to=Category, default=1, on_delete=models.CASCADE)
+    image = models.ImageField(blank=True, null=True, upload_to='meep/images/')
 
     # Keep track or count of likes
     def number_of_likes(self):
@@ -64,4 +65,13 @@ class Meep(models.Model):
             f"({self.created_at:%Y-%m-%d %H:%M}): "
             f"{self.body}..."
             )
+
+
+class Comment(models.Model):
+    meep = models.ForeignKey(Meep, related_name="comments", on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 

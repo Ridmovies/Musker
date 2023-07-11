@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from musker.models import Meep, Profile
+from musker.models import Meep, Profile, Comment
 
 
 # Profile Extras Form
@@ -38,7 +38,7 @@ class MeepForm(forms.ModelForm):
 
     class Meta:
         model = Meep
-        fields = ['category', 'body']
+        fields = ['category', 'body', 'image']
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -73,4 +73,13 @@ class UserProfileUpdateForm(forms.ModelForm):
         model = User
         fields = ['first_name']
 
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('body',)
+
+        widgets = {
+            'body': forms.Textarea(attrs={'class': 'form-control'}),
+           }
 

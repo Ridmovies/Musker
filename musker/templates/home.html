@@ -5,7 +5,6 @@
 
     <div class="container text-center">
         <div class="row">
-            <div class="col-8">
                 <h1>{{ title }}</h1>
 
                 {# SHOW MEEPS #}
@@ -27,6 +26,9 @@
                                 </div>
 
 			                    <div class="col-11">
+                                {% if meep.image %}
+                                    <img src="{{ meep.image.url }}" alt="..." width="200">
+                                {% endif %}<br/>
                                     {{ meep.body }}<br/><br/>
                                     <small class="text-muted">
                                     {{ meep.category }}
@@ -40,13 +42,13 @@
                                             <a href="{% url 'meep_like' meep.pk %}">Like!</a>
                                         {% endif %}
 
-                                        {% if user.id == meep.user.id %}
-                                            &nbsp;<a href="{% url 'delete_meep' meep.id %}">[delete]</a>
-                                        {% endif %}
+                                        <a href="{% url 'add_comment' meep.id %}">[comment]</a>
 
                                         {% if user.id == meep.user.id %}
-                                            &nbsp;<a href="{% url 'edit_meep' meep.id %}">[edit]</a>
+                                            &nbsp;<a href="{% url 'delete_meep' meep.id %}">[delete]</a>
+                                            <a href="{% url 'edit_meep' meep.id %}">[edit]</a>
                                         {% endif %}
+
                                     {% endif %}
                                     </small>
                                 </div>
@@ -55,9 +57,6 @@
                     </div>
                 {% endfor %}
 
-
-
-            </div>
         </div>
     </div>
 

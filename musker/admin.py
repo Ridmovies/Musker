@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group, User
 
-from musker.models import Profile, Meep, Category
+from musker.models import Profile, Meep, Category, Comment
 
 # Unregister Groups
 admin.site.unregister(Group)
@@ -31,5 +31,6 @@ admin.site.register(User, UserAdmin)
 
 admin.site.register(Meep)
 admin.site.register(Category)
+admin.site.register(Comment)
 
 

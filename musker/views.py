@@ -8,38 +8,17 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 
 
-from musker.forms import MeepForm, UserRegistrationForm, UserProfileUpdateForm, ProfilePicForm
-from musker.models import Profile, Meep, Category
+from musker.forms import MeepForm, UserRegistrationForm, UserProfileUpdateForm, ProfilePicForm, CommentForm
+from musker.models import Profile, Meep, Category, Comment
 
 
 @login_required()
 def home(request):
-    # if request.user.is_authenticated:
-    #     form = MeepForm(request.POST or None)
-    #     if request.method == "POST":
-    #         if form.is_valid():
-    #             meep = form.save(commit=False)
-    #             meep.user = request.user
-    #             meep.save()
-    #             messages.success(request, "Your Meep Has Posted!")
-    #             return redirect('home')
-
-    #     meeps = Meep.objects.all().order_by('-created_at')
-    #     context = {
-    #         'title': 'Home',
-    #         'meeps': meeps,
-    #         'form': form,
-    #         # 'count_not_read_messages': Message.objects.filter(Q(is_read=False) & Q(recipient__id=request.user.id)).count()
-    #     }
-    #     return render(request, 'home.html', context=context)
-    #
-    # else:
     meeps = Meep.objects.all().order_by('-created_at')
-    categories = Category.objects.all()
     context = {
         'title': 'Home',
         'meeps': meeps,
-        'categories': categories,
+        # 'categories': categories,
     }
     return render(request, 'home.html', context=context)
 
@@ -132,6 +111,19 @@ class MeepCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class BugReportMeepCreateView(CreateView):
+    model = Meep
+    fields = ['body', 'image']
+    template_name = 'bug_report.html'
+    success_url = reverse_lazy('home')
+    extra_context = {'title': 'Bug Report'}
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.category = Category.objects.get(title='Bug Report')
         return super().form_valid(form)
 
 
@@ -314,7 +306,7 @@ class CategoryListView(ListView):
 
 
 def category(request, pk=None):
-    categories = Category.objects.all()
+    # categories = Category.objects.all()
     if pk:
         meeps = Meep.objects.filter(category=pk).order_by('-created_at')
     else:
@@ -322,9 +314,42 @@ def category(request, pk=None):
     context = {
         'title': f'Category {meeps.first().category.title}',
         'meeps': meeps,
-        # 'categories': categories,
     }
     return render(request, template_name='show_category.html', context=context)
 
+
+@login_required
+def add_comment(request, pk):
+
+    meep = Meep.objects.get(id=pk)
+
+    if request.method == 'POST':
+        form = CommentForm(data=request.POST)
+        form.instance.meep_id = pk
+        form.instance.name = request.user
+        if form.is_valid():
+            form.save()
+
+        return redirect('home')
+
+    else:
+        context = {
+            'title': 'Add comment',
+            'form': CommentForm(),
+            'meep': meep,
+        }
+        return render(request, template_name='add_comment.html', context=context)
+
+
+# class CommentCreateView(CreateView):
+#     model = Comment
+#     template_name = 'add_comment.html'
+#     fields = ['body']
+#     success_url = reverse_lazy('home')
+#
+#     def form_valid(self, form):
+#         form.instance.meep_id = self.kwargs['pk']
+#         form.instance.name = self.request.user
+#         return super().form_valid(form)
 
 

@@ -36,10 +36,8 @@
                                         - {{ meep.number_of_likes }} Likes
                     <a href="{% url 'meep_like' meep.id %}">
                         {% if user in meep.likes.all %}
-{#                            <i class="fa-sharp fa-solid fa-heart"></i>#}
                             [unlike]
                         {% else %}
-{#                            <i class="fa-regular fa-heart"></i>#}
                             [like]
                         {% endif %}
                     </a>
