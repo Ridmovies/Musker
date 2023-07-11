@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    {% if title %}
+        <h1>{{ title }}</h1>
+    {% else %}
+        <h1>Musker</h1>
+    {% endif %}
+
+    <br/><br/>
+
+        {% for meep in meeps %}
+            <div class="alert alert-dark" role="alert">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-1">
+                            {% if meep.user.profile.profile_image %}
+                                <img src="{{ meep.user.profile.profile_image.url }}"
+                                     width=50 height=50 class="rounded-circle"
+                                     alt="{{ profile.user.username }}">
+                            {% else %}
+                                <img src="{% static 'img/default_avatar.jpg' %}"
+                                     width=50 height=50 class="rounded-circle"
+                                     alt="{{ profile.user.username }}">
+                            {% endif %}
+                        </div>
+
+                        <div class="col-11">
+                            {{ meep.body }}<br/><br/>
+                            <small class="text-muted">
+                            {{ meep.category }}
+                            ({{ meep.created_at}}) By
+                            <a href="{% url 'profile' meep.user.id %}"> {{ meep.user.username }}</a>
+                                - {{ meep.number_of_likes }} Likes
+                            {% if user.is_authenticated %}
+                                {% if request.user in meep.likes.all %}
+                                    <a href="{% url 'meep_like' meep.pk %}">Unlike</a>
+                                {% else %}
+                                    <a href="{% url 'meep_like' meep.pk %}">Like!</a>
+                                {% endif %}
+
+                                {% if user.id == meep.user.id %}
+                                    &nbsp;<a href="{% url 'delete_meep' meep.id %}">[delete]</a>
+                                {% endif %}
+
+                                {% if user.id == meep.user.id %}
+                                    &nbsp;<a href="{% url 'edit_meep' meep.id %}">[edit]</a>
+                                {% endif %}
+                            {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+{% endblock %}

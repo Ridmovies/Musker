@@ -9,36 +9,39 @@ from django.views.generic import ListView, DetailView, CreateView, TemplateView,
 
 
 from musker.forms import MeepForm, UserRegistrationForm, UserProfileUpdateForm, ProfilePicForm
-from musker.models import Profile, Meep
+from musker.models import Profile, Meep, Category
 
 
+@login_required()
 def home(request):
-    if request.user.is_authenticated:
-        form = MeepForm(request.POST or None)
-        if request.method == "POST":
-            if form.is_valid():
-                meep = form.save(commit=False)
-                meep.user = request.user
-                meep.save()
-                messages.success(request, "Your Meep Has Posted!")
-                return redirect('home')
+    # if request.user.is_authenticated:
+    #     form = MeepForm(request.POST or None)
+    #     if request.method == "POST":
+    #         if form.is_valid():
+    #             meep = form.save(commit=False)
+    #             meep.user = request.user
+    #             meep.save()
+    #             messages.success(request, "Your Meep Has Posted!")
+    #             return redirect('home')
 
-        meeps = Meep.objects.all().order_by('-created_at')
-        context = {
-            'title': 'Home',
-            'meeps': meeps,
-            'form': form,
-            # 'count_not_read_messages': Message.objects.filter(Q(is_read=False) & Q(recipient__id=request.user.id)).count()
-        }
-        return render(request, 'home.html', context=context)
-
-    else:
-        meeps = Meep.objects.all().order_by('-created_at')
-        context = {
-            'title': 'Home',
-            'meeps': meeps,
-        }
-        return render(request, 'home.html', context=context)
+    #     meeps = Meep.objects.all().order_by('-created_at')
+    #     context = {
+    #         'title': 'Home',
+    #         'meeps': meeps,
+    #         'form': form,
+    #         # 'count_not_read_messages': Message.objects.filter(Q(is_read=False) & Q(recipient__id=request.user.id)).count()
+    #     }
+    #     return render(request, 'home.html', context=context)
+    #
+    # else:
+    meeps = Meep.objects.all().order_by('-created_at')
+    categories = Category.objects.all()
+    context = {
+        'title': 'Home',
+        'meeps': meeps,
+        'categories': categories,
+    }
+    return render(request, 'home.html', context=context)
 
 
 def profile_list(request):
@@ -303,6 +306,25 @@ def edit_meep(request, pk):
     else:
         messages.success(request, "You do not have access rights")
         return redirect('home')
+
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'category_list.html'
+
+
+def category(request, pk=None):
+    categories = Category.objects.all()
+    if pk:
+        meeps = Meep.objects.filter(category=pk).order_by('-created_at')
+    else:
+        meeps = Meep.objects.all().order_by('-created_at')
+    context = {
+        'title': f'Category {meeps.first().category.title}',
+        'meeps': meeps,
+        # 'categories': categories,
+    }
+    return render(request, template_name='show_category.html', context=context)
 
 
 

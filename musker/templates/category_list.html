@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if title %}
+        <h1>{{ title }}</h1>
+    {% else %}
+        <h1>Musker</h1>
+    {% endif %}
+
+<ul>
+{% for category in object_list %}
+    <li><a href="{% url 'category' category.id %}"> {{ category.title }}</a></li>
+{% empty %}
+    <li>No articles yet.</li>
+{% endfor %}
+</ul>
+
+
+
+{% endblock %}

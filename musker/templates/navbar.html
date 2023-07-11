@@ -27,6 +27,22 @@
       {% else %}
 
       {% endif %}
+
+        {# CATEGORY DROPDOWN BUTTON #}
+
+                <div class="dropdown">
+                  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    CATEGORIES
+                  </a>
+
+                  <ul class="dropdown-menu">
+                      {% for category in categories %}
+                    <li><a class="dropdown-item" href="{% url 'category' category.id %}">{{ category.title }}</a></li>
+                      {% endfor %}
+
+                  </ul>
+                </div>
+
       </ul>
 
 {#    RIGHT SIDE#}
@@ -77,6 +93,8 @@
                       </li>
                   </ul>
                 </div>
+
+
 
             </ul>
         {% else %}
