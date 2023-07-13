@@ -45,20 +45,29 @@
                                         <a href="{% url 'add_comment' meep.id %}">[comment]</a>
 
                                         {% if user.id == meep.user.id %}
-                                            &nbsp;<a href="{% url 'delete_meep' meep.id %}">[delete]</a>
+                                            <a href="{% url 'delete_meep' meep.id %}">[delete]</a>
                                             <a href="{% url 'edit_meep' meep.id %}">[edit]</a>
                                         {% endif %}
-
                                     {% endif %}
                                     </small>
                                 </div>
                             </div>
+
                         </div>
                     </div>
-                {% endfor %}
+                    {# Comment block #}
+                        {% if not meep.comments.all %}
+                            No Comments Yet..
+                            <br>
+                        {% else %}
+                            {% for comment in meep.comments.all %}
+                                {{ comment.name }} - {{ comment.created_at }} - {{ comment.body }}<br>
+                            {% endfor %}
+                        {% endif %}<br>
 
+
+                {% endfor %}
         </div>
     </div>
-
 
 {% endblock %}

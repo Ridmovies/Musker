@@ -299,14 +299,15 @@ def edit_meep(request, pk):
         return redirect('home')
 
 
-class CategoryListView(ListView):
-    model = Category
-    template_name = 'category_list.html'
+# class CategoryListView(ListView):
+#     model = Category
+#     template_name = 'category_list.html'
 
 
 def category(request, pk=None):
     # categories = Category.objects.all()
     if pk:
+        # if Meep.objects.filter(category=pk).exists():
         meeps = Meep.objects.filter(category=pk).order_by('-created_at')
     else:
         meeps = Meep.objects.all().order_by('-created_at')
@@ -338,5 +339,17 @@ def add_comment(request, pk):
             'meep': meep,
         }
         return render(request, template_name='add_comment.html', context=context)
+
+
+def track_map(request):
+
+    context = {
+        # 'link': "https://yandex.ru/maps/?um=constructor%3A8115b4801e192f0f310d90a031709042cfdabd93a849e93200bc047b9683e03f&source=constructorLink",
+        'link': "https://yandex.ru/map-widget/v1/?um=constructor%3A8115b4801e192f0f310d90a031709042cfdabd93a849e93200bc047b9683e03f&amp;source=constructor",
+        'title': 'Track Map',
+    }
+    return render(request, template_name='track_map.html', context=context)
+
+
 
 
