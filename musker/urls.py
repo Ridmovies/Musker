@@ -11,7 +11,6 @@ urlpatterns = [
     path("profile_list/", profile_list, name='profile_list'),
     path("follows_list/<int:pk>/", follows_list, name='follows_list'),
     path("follow_by_list/<int:pk>/", follow_by_list, name='follow_by_list'),
-    # path("profile/<int:pk>/", ProfileDetailView.as_view(), name='profile'),
     path("profile/<int:pk>/", profile, name='profile'),
     path("unfollow/<int:pk>/", unfollow, name='unfollow'),
     path("add_meeps/", login_required(MeepCreateView.as_view()), name='add_meeps'),
@@ -33,9 +32,6 @@ urlpatterns = [
     path('edit_meep/<int:pk>', edit_meep, name="edit_meep"),
 
     path("bug_report/", login_required(BugReportMeepCreateView.as_view()), name='bug_report'),
-    # path('add_comment/<int:pk>/', CommentCreateView.as_view(), name="add_comment"),
     path('add_comment/<int:pk>/', add_comment, name="add_comment"),
-
-
 
 ]

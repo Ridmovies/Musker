@@ -74,4 +74,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+# class NewTestTable(models.Model):
+#     name = models.CharField(max_length=255)
+
 

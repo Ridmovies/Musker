@@ -32,5 +32,6 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Meep)
 admin.site.register(Category)
 admin.site.register(Comment)
+# admin.site.register(NewTestTable)
 
 

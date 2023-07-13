@@ -10,6 +10,81 @@
 			    <div class="col-8">
 
                 <h1>{{ profile.user.username }}'s Profile </h1>
+				{% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" class="rounded-circle" width="200" height="200">
+				{% endif %}
+
+                {% if profile.homepage_link %}
+                    <a href="{{ profile.homepage_link }}" target="new">
+                                <i class="fa-solid fa-link" style="color:gray"></i></a>
+                                {% endif %}
+                                &nbsp;&nbsp;
+                                {% if profile.facebook_link %}
+                    <a href="{{ profile.facebook_link }}" target="new">
+                        <i class="fa-brands fa-facebook-f" style="color:gray"></i></a>
+                                {% endif %}
+                                &nbsp;&nbsp;
+                                {% if profile.instagram_link %}
+                    <a href="{{ profile.instagram_link }}" target="new">
+                        <i class="fa-brands fa-instagram" style="color:gray"></i></a>
+                                {% endif %}
+                                &nbsp;&nbsp;
+                                {% if profile.linkedin_link %}
+                    <a href="{{ profile.linkedin_link }}" target="new">
+                        <i class="fa-brands fa-linkedin-in" style="color:gray"></i></a>
+                                {% endif %}
+
+                {% if profile.profile_bio %}
+                    <p align="justify">
+                        {{profile.profile_bio }}
+                    </p>
+                {% endif %}
+
+        {# Follow and Unfollow Button#}
+        <form method="post">
+            {% csrf_token %}
+            {% if profile in user.profile.follows.all %}
+                <button type="submit" class="btn btn-outline-danger" name="follow" value="unfollow">unfollow</button>
+            {% else %}
+                <button type="submit" class="btn btn-outline-success" name="follow" value="follow">follow</button>
+            {% endif %}
+        </form>
+
+        {# Direct Button #}
+        <a href="{% url 'create_direct' profile.id %}"> Direct</a>
+
+        <br/><br/>
+
+        <strong>Follows</strong><br/>
+        {% for following in profile.follows.all|slice:3 %}
+            <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a>
+            <a href="{% url 'unfollow' following.user.id %}">[unfollow]</a>
+            <br/>
+        {% endfor %}
+        <br>
+
+        {% if profile.follows.all.count > 3 %}
+            <a href="{% url 'follows_list' user.id %}">[show all]</a>
+        {% endif %}
+
+
+        <strong>Followed By</strong><br/>
+        {% for following in profile.followed_by.all|slice:3 %}
+            <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a>
+            <br/>
+        {% endfor %}
+        <br>
+
+        {% if profile.followed_by.all.count > 3 %}
+            <a href="{% url 'follow_by_list' user.id %}">[show all]</a>
+        {% endif %}
+
+    {% endif %}
+    <br/><br/>
+
+
+            </div>
+            </div>
 
                     {% if meeps %}
                         {% for meep in meeps %}
@@ -63,91 +138,6 @@
                     {% endif %}
 
                 </div>
-
-
-{#            Right side#}
-            <div class="col-4">
-                <br/><br/><br/>
-				{% if profile.profile_image %}
-                    <img src="{{ profile.profile_image.url }}" class="rounded-circle" width="200" height="200">
-                    <br/><br/>
-				{% endif %}
-
-                {% if profile.homepage_link %}
-                    <a href="{{ profile.homepage_link }}" target="new">
-                                <i class="fa-solid fa-link" style="color:gray"></i></a>
-                                {% endif %}
-                                &nbsp;&nbsp;
-                                {% if profile.facebook_link %}
-                    <a href="{{ profile.facebook_link }}" target="new">
-                        <i class="fa-brands fa-facebook-f" style="color:gray"></i></a>
-                                {% endif %}
-                                &nbsp;&nbsp;
-                                {% if profile.instagram_link %}
-                    <a href="{{ profile.instagram_link }}" target="new">
-                        <i class="fa-brands fa-instagram" style="color:gray"></i></a>
-                                {% endif %}
-                                &nbsp;&nbsp;
-                                {% if profile.linkedin_link %}
-                    <a href="{{ profile.linkedin_link }}" target="new">
-                        <i class="fa-brands fa-linkedin-in" style="color:gray"></i></a>
-                                {% endif %}
-                <br/><br/>
-
-                {% if profile.profile_bio %}
-                    <p align="justify">
-                        {{profile.profile_bio }}
-                    </p>
-                {% endif %}
-                <br/><br/>
-
-        {# Follow and Unfollow Button#}
-        <form method="post">
-            {% csrf_token %}
-            {% if profile in user.profile.follows.all %}
-                <button type="submit" class="btn btn-outline-danger" name="follow" value="unfollow">unfollow</button>
-            {% else %}
-                <button type="submit" class="btn btn-outline-success" name="follow" value="follow">follow</button>
-            {% endif %}
-        </form>
-
-        {# Direct Button #}
-        <a href="{% url 'create_direct' profile.id %}"> Direct</a>
-
-        <br/><br/>
-
-        <strong>Follows</strong><br/>
-        {% for following in profile.follows.all|slice:3 %}
-            <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a>
-            <a href="{% url 'unfollow' following.user.id %}">[unfollow]</a>
-            <br/>
-        {% endfor %}
-        <br>
-
-        {% if profile.follows.all.count > 3 %}
-            <a href="{% url 'follows_list' user.id %}">[show all]</a>
-        {% endif %}
-
-
-        <br/><br/>
-        <strong>Followed By</strong><br/>
-        {% for following in profile.followed_by.all|slice:3 %}
-            <a href="{% url 'profile' following.user.id %}"> @{{ following }}</a>
-            <br/>
-        {% endfor %}
-        <br>
-
-        {% if profile.followed_by.all.count > 3 %}
-            <a href="{% url 'follow_by_list' user.id %}">[show all]</a>
-        {% endif %}
-
-    {% endif %}
-    <br/><br/>
-
-
-            </div>
-            </div>
-        </div>
 
 
 

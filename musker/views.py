@@ -12,7 +12,6 @@ from musker.forms import MeepForm, UserRegistrationForm, UserProfileUpdateForm, 
 from musker.models import Profile, Meep, Category, Comment
 
 
-@login_required()
 def home(request):
     meeps = Meep.objects.all().order_by('-created_at')
     context = {
@@ -339,17 +338,5 @@ def add_comment(request, pk):
             'meep': meep,
         }
         return render(request, template_name='add_comment.html', context=context)
-
-
-# class CommentCreateView(CreateView):
-#     model = Comment
-#     template_name = 'add_comment.html'
-#     fields = ['body']
-#     success_url = reverse_lazy('home')
-#
-#     def form_valid(self, form):
-#         form.instance.meep_id = self.kwargs['pk']
-#         form.instance.name = self.request.user
-#         return super().form_valid(form)
 
 

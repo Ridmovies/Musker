@@ -20,6 +20,17 @@
           <a class="nav-link" href="{% url 'chat' %}">Chat</a>
         </li>
 
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'direct' user.id %}">
+                {% if user.profile.new_messages %}
+                    Direct NM
+                {% else %}
+                    Direct
+                {% endif %}
+            </a>
+         </li>
+
         <li class="nav-item">
           <a class="nav-link" href="{% url 'profile_list' %}">Profile List</a>
         </li>
@@ -54,16 +65,18 @@
         {% if user.is_authenticated %}
 
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <strong><a class="nav-link" href="{% url 'profile' user.id %}">{{ request.user.username }}</a></strong>
-                </li>
+{#                <li class="nav-item">#}
+{#                    <strong><a class="nav-link" href="{% url 'profile' user.id %}">{{ request.user.username }}</a></strong>#}
+{#                </li>#}
 
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'profile' user.id %}">
                         {% if user.profile.profile_image %}
                             <img src="{{ user.profile.profile_image.url }}" width=35 height=35 class="rounded-circle" alt="{{ user.profile.user.username }}">
+                            <strong>{{ request.user.username }}</strong>
                         {% else %}
                             <img src="{% static 'img/default_avatar.jpg' %}" width=35 height=35 class="rounded-circle" alt="{{ user.profile.user.username }}">
+                            <strong>{{ request.user.username }}</strong>
                         {% endif %}
                     </a>
                 </li>
@@ -80,16 +93,6 @@
                     <li><a class="dropdown-item" href="{% url 'profile' user.id %}">Profile</a></li>
 
 
-                      <li>
-                        <a class="dropdown-item" href="{% url 'direct' user.id %}">
-                            {% if user.profile.new_messages %}
-                                Direct NM
-                            {% else %}
-                                My Direct
-                            {% endif %}
-                        </a>
-                     </li>
-
                     <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>
 
                       <li>
@@ -97,10 +100,8 @@
                       </li>
                   </ul>
                 </div>
-
-
-
             </ul>
+
         {% else %}
 
             <ul class="navbar-nav ml-auto">
