@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if title %}
+        <h1>{{ title }}</h1>
+    {% else %}
+        <h1>Musker</h1>
+    {% endif %}
+     <br/> <br/>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" name="search">
+{#            <label class="form-label">Search meep</label>#}
+{#            <input type="input" class="form-control" placeholder="Search meep" name="search">#}
+{#            <div class="form-text">Search meep</div>#}
+            <br/>
+        <button type="submit" class="btn btn-outline-success">Search</button>
+    </form>
+
+    <br/> <br/>
+
+    {% if search_value %}
+        You search: {{ search_value }}
+        <br/>
+    {% endif %}
+
+
+
+    {% if searched %}
+        {% for meep in searched %}
+            {{ meep }}<br/>
+        {% endfor %}
+
+    {% else %}
+        Nothing =(
+    {% endif %}
+
+
+
+{% endblock %}

@@ -8,17 +8,27 @@ from django.db.models import Q
 
 from direct.forms import DirectForm
 from direct.models import Message
+from musker.models import Profile
 
 
 @login_required
 def direct(request, pk):
     if request.user.id == pk:
         directs = Message.objects.filter(Q(recipient_id=pk) | Q(sender_id=pk))
+
+        new_messages = Message.objects.filter(recipient_id=pk, is_read=False).exists()
+
+        if new_messages:
+            Profile.objects.filter(id=pk).update(new_messages=True)
+        else:
+            Profile.objects.filter(id=pk).update(new_messages=False)
+
         form = DirectForm
         context = {
             'directs': directs,
             'form': form,
-            'title': 'Directs'
+            'title': 'Directs',
+            'new_messages': new_messages
         }
         return render(request, 'direct.html', context)
     else:

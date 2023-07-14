@@ -16,7 +16,7 @@
         you have no new messages
     {% endif %}
 
-</br></br>
+<br/><br/>
 
     <h4>Don't read messages:</h4>  </br>
 
@@ -32,13 +32,13 @@
             </small>
             <br>
         {{ direct.body }}
-        </br>
+        <br/>
         {% endif %}
     {% endfor %}
 
-    </br></br>
+<br/><br/>
 
-    <h4>Read messages:</h4></br>
+    <h4>Read messages:</h4><br/>
     {% for direct in directs %}
         {% if direct.is_read %}
             <small>
@@ -50,9 +50,12 @@
             <br>
         {{ direct.body }}
 
-        </br></br>
+        <br/><br/>
+
         {% endif %}
     {% endfor %}
+
+                DEBUG new_message: {{ new_messages }}
 
 
 

@@ -351,5 +351,39 @@ def track_map(request):
     return render(request, template_name='track_map.html', context=context)
 
 
+def search_meep(request):
+    if request.method == 'POST':
+        search_value = request.POST['search']
+        searched = Meep.objects.filter(body__contains=search_value)
+        context = {
+            'title': 'Search meep',
+            'search_value': search_value,
+            'searched': searched
+        }
+        return render(request, template_name='search_meep.html', context=context)
+
+    else:
+        context = {
+            'title': 'Search meep',
+        }
+        return render(request, template_name='search_meep.html', context=context)
+
+
+def search_user(request):
+    if request.method == 'POST':
+        search_value = request.POST['search']
+        searched = User.objects.filter(username__contains=search_value)
+        context = {
+            'title': 'Search user',
+            'search_value': search_value,
+            'searched': searched
+        }
+        return render(request, template_name='search_user.html', context=context)
+
+    else:
+        context = {
+            'title': 'Search user',
+        }
+        return render(request, template_name='search_user.html', context=context)
 
 

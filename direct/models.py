@@ -18,13 +18,12 @@ class Message(models.Model):
         return f"from: {self.sender} to: {self.recipient} - {self.body}"
 
 
-@receiver(post_save, sender=Message)
-def direct_signal_message(sender, **kwargs):
-    if kwargs['created']:
-        print('direct message')
-        instance = kwargs['instance']
-        recipient_message_id = instance.recipient.id
-        Profile.objects.filter(id=recipient_message_id).update(new_messages=True)
+# signal for new message
+# @receiver(post_save, sender=Message)
+# def direct_signal_message(sender, **kwargs):
+#     if kwargs['created']:
+#         print('direct message')
+#         instance = kwargs['instance']
+#         recipient_message_id = instance.recipient.id
+#         Profile.objects.filter(id=recipient_message_id).update(new_messages=True)
 
-
-# post_save.connect(direct_signal_message, sender=Message)
