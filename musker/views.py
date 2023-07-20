@@ -83,6 +83,7 @@ def profile(request, pk):
 
         # Post Form logic
         if request.method == "POST":
+            # Get current user
             current_user_profile = request.user.profile
             # Get form data
             action = request.POST['follow']
