@@ -3,12 +3,12 @@
 
 {% block content %}
 
-    <div class="container text-center">
+    <div class="container">
         <div class="row">
                 <h1>{{ title }}</h1>
 
                 {# SHOW MEEPS #}
-                {% for meep in meeps %}
+                {% for meep in page_obj %}
                     <div class="alert alert-dark" role="alert">
                         <div class="container">
 		                    <div class="row">
@@ -48,15 +48,17 @@
                                             <a href="{% url 'delete_meep' meep.id %}">[delete]</a>
                                             <a href="{% url 'edit_meep' meep.id %}">[edit]</a>
                                         {% endif %}
+
                                     {% endif %}
                                     </small>
                                 </div>
-                            </div>
 
+                            </div>
                         </div>
                     </div>
 
-{# Comment block #}
+                            {# Comment block #}
+                        <div class="container">
                         {% if not meep.comments.all %}
                             No Comments Yet..
                             <br>
@@ -65,10 +67,15 @@
                                 {{ comment.name }} - {{ comment.created_at }} - {{ comment.body }}<br>
                             {% endfor %}
                         {% endif %}<br>
+                        </div>
+
+
 
                 {% endfor %}
 
         </div>
     </div>
 
+    <br/>
+{% include 'pagination.html' %}
 {% endblock %}

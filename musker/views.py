@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
@@ -14,9 +15,15 @@ from musker.models import Profile, Meep, Category, Comment
 
 def home(request):
     meeps = Meep.objects.all().order_by('-created_at')
+
+    paginator = Paginator(meeps, 3)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     context = {
         'title': 'Home',
         'meeps': meeps,
+        'page_obj': page_obj
         # 'categories': categories,
     }
     return render(request, 'home.html', context=context)
@@ -167,7 +174,6 @@ def user_logout(request):
 
 
 def user_registration(request):
-
     if request.method == 'POST':
         form = UserRegistrationForm(data=request.POST)
         if form.is_valid():
@@ -185,6 +191,13 @@ def user_registration(request):
             'form': form,
         }
         return render(request, 'registration.html', context=context)
+
+
+class UserRegistrationCreateView(CreateView):
+    model = User
+    form_class = UserRegistrationForm
+    template_name = 'registration.html'
+    success_url = reverse_lazy('home')
 
 
 class UserProfileUpdateView(UpdateView):

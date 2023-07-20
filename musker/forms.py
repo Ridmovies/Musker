@@ -44,7 +44,7 @@ class MeepForm(forms.ModelForm):
 class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['username', 'password1', 'password2', 'email']
 
     def __init__(self, *args, **kwargs):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
@@ -66,6 +66,12 @@ class UserRegistrationForm(UserCreationForm):
         self.fields['password2'].label = ''
         self.fields[
             'password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
+
+        self.fields['email'].widget.attrs['class'] = 'form-control'
+        self.fields['email'].widget.attrs['placeholder'] = 'Email'
+        self.fields['email'].label = ''
+        self.fields[
+            'email'].help_text = '<span class="form-text text-muted"><small>Not required</small></span>'
 
 
 class UserProfileUpdateForm(forms.ModelForm):

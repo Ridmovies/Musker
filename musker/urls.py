@@ -4,7 +4,7 @@ from django.urls import path
 from musker.views import home, profile_list, profile, MeepCreateView, MeepListView, user_login, user_logout, \
     user_registration, UserProfileUpdateView, edit_user_profile, update_user, meep_like, meep_show, unfollow, \
     follows_list, follow_by_list, delete_meep, edit_meep, category, BugReportMeepCreateView, \
-    add_comment, track_map, search_meep, search_user
+    add_comment, track_map, search_meep, search_user, UserRegistrationCreateView
 
 urlpatterns = [
     path("", home, name='home'),
@@ -22,6 +22,7 @@ urlpatterns = [
 
     path("login/", user_login, name='login'),
     path("logout/", user_logout, name='logout'),
+    # path("registration/", UserRegistrationCreateView.as_view(), name='registration'),
     path("registration/", user_registration, name='registration'),
     # path("edit_profile/<int:pk>", UserProfileUpdateView.as_view(), name='edit_profile'),
     # path("edit_profile/", edit_user_profile, name='edit_profile'),
