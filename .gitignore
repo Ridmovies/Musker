@@ -1,2 +1,3 @@
 /wsgi.py
 /.htaccess
+.env

@@ -1,3 +1,6 @@
+import uuid
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
@@ -6,11 +9,12 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.utils.timezone import now
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 
 
 from musker.forms import MeepForm, UserRegistrationForm, UserProfileUpdateForm, ProfilePicForm, CommentForm
-from musker.models import Profile, Meep, Category, Comment
+from musker.models import Profile, Meep, Category, Comment, EmailVerification
 
 
 def home(request):
@@ -180,6 +184,10 @@ def user_registration(request):
             user = form.save()
             login(request, user)
             messages.success(request, "You have successfully registered! Wellcome!")
+            if form.instance.email:
+                expiration = now() + timedelta(hours=48)
+                record = EmailVerification.objects.create(code=uuid.uuid4(), user=user, expiration=expiration)
+                record.send_verification_email()
             return redirect('home')
         else:
             messages.error(request, form.errors)
