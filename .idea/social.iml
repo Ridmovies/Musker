@@ -24,6 +24,7 @@
         <option value="$MODULE_DIR$/musker/templates" />
         <option value="$MODULE_DIR$/direct/templates" />
         <option value="$MODULE_DIR$/chat/templates" />
+        <option value="$MODULE_DIR$/eventapp/templates" />
       </list>
     </option>
   </component>

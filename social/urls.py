@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('musker.urls')),
     path('direct/', include('direct.urls')),
     path('chat/', include('chat.urls')),
+    path('eventapp/', include('eventapp.urls')),
 ]
 
 if settings.DEBUG:

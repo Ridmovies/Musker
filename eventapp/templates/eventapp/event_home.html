@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if title %}
+        <h1>{{ title }}</h1>
+    {% else %}
+        <h1>Musker</h1>
+    {% endif %}
+
+
+    {% for event in events %}
+        {{ event }}<br/>
+        {{ event.body }}<br/>
+        {% if event.image %}
+            <img src="{{ event.image.url }}" alt="..." width="200">
+        {% endif %}<br/>
+
+        {% if event.map_key %}
+           <div class="strava-embed-placeholder" data-embed-type="activity"
+                data-embed-id="{{ event.map_key }}">
+           </div><script src="https://strava-embeds.com/embed.js"></script>
+        {% endif %}
+
+        {% if event.user == request.user %}
+        <a href="{% url 'event_delete' event.pk %}">[delete]</a>
+        <a href="{% url 'event_edit' event.pk %}">[edit]</a>
+        {% endif %}
+        <br/><br/>
+    {% endfor %}
+
+
+
+{% endblock %}
