@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User, AbstractUser
 from django.urls import reverse
 from django.utils.timezone import now
+from taggit.managers import TaggableManager
 
 
 class Category(models.Model):
@@ -58,6 +59,7 @@ class Meep(models.Model):
     likes = models.ManyToManyField(User, related_name="meep_like", blank=True)
     category = models.ForeignKey(to=Category, default=1, on_delete=models.CASCADE)
     image = models.ImageField(blank=True, null=True, upload_to='meep/images/')
+    tags = TaggableManager()
 
     # Keep track or count of likes
     def number_of_likes(self):

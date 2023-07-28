@@ -30,6 +30,13 @@
                                     <img src="{{ meep.image.url }}" alt="..." width="200">
                                 {% endif %}<br/>
                                     {{ meep.body }}<br/><br/>
+
+                                {% if meep.tags.all %}
+
+                                    <p class="tags">Tags: {{ meep.tags.all|join:", " }}</p>
+
+                                {% endif %}
+
                                     <small class="text-muted">
                                     {{ meep.category }}
                                     ({{ meep.created_at}}) By

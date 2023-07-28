@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.timezone import now
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
-
+from taggit.models import Tag
 
 from musker.forms import MeepForm, UserRegistrationForm, UserProfileUpdateForm, ProfilePicForm, CommentForm
 from musker.models import Profile, Meep, Category, Comment, EmailVerification
@@ -141,6 +141,18 @@ class MeepListView(ListView):
     model = Meep
     template_name = 'meep_list.html'
     extra_context = {'title': 'Meep List'}
+
+
+def meep_list_tag(request, tag_slug=None):
+    meep_list = Meep.objects.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+    meep_list = meep_list.filter(tags__in=[tag])
+    return render(request,
+                  'meep_list_tag.html',
+                  {'object_list': meep_list,
+                   'tag': tag})
 
 
 def user_login(request):
