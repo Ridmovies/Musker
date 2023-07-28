@@ -1,28 +1,60 @@
 {% load static %}
 
 
+
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'home' %}">Musker</a>
+      <a class="navbar-brand" href="{% url 'home' %}"><b>Musker</b></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-      {% if user.is_authenticated %}
-
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'add_meeps' %}">Add meep</a>
+          <a class="nav-link active" aria-current="page" href="#">Link</a>
         </li>
-
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'chat' %}">Chat</a>
+          <a class="nav-link" href="#">Link</a>
         </li>
 
 
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'direct' user.id %}">
+          {# CATEGORY DROPDOWN BUTTON #}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Categories
+          </a>
+          <ul class="dropdown-menu">
+                  {% for category in categories %}
+                <li><a class="dropdown-item" href="{% url 'category' category.id %}">{{ category.title }}</a></li>
+                  {% endfor %}
+              </ul>
+        </li>
+
+
+          {# Testing Link DROPDOWN BUTTON #}
+{% if user.is_authenticated %}
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Testing
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'profile_list' %}">Profile List</a></li>
+
+
+
+        <li>
+          <a class="dropdown-item" href="{% url 'add_meeps' %}">Add meep</a>
+        </li>
+
+        <li>
+          <a class="dropdown-item" href="{% url 'chat' %}">Chat</a>
+        </li>
+
+
+          <li>
+            <a class="dropdown-item" href="{% url 'direct' user.id %}">
                 {% if user.profile.new_messages %}
                     Direct NM
                 {% else %}
@@ -31,109 +63,62 @@
             </a>
           </li>
 
-      {% endif %}
-
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'event_home' %}">Events</a>
+        <li>
+          <a class="dropdown-item" href="{% url 'event_home' %}">Events</a>
+        </li>
+            <li><a class="dropdown-item" href="{% url 'track_map' %}">Map</a></li>
+              <li><a class="dropdown-item" href="{% url 'search_meep' %}">Search meep</a></li>
+              <li><a class="dropdown-item" href="{% url 'search_user' %}">Search user</a></li>
+              <li><a class="dropdown-item" href="{% url 'bug_report' %}">Bug Report</a></li>
+              <li><a class="dropdown-item" href="{% url 'add_event' %}">Add Event</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
         </li>
 
-      {% if user.is_authenticated %}
+{% endif %}
 
-        {# CATEGORY DROPDOWN BUTTON #}
-            <li class="nav-item">
-                <div class="dropdown">
-                    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        Categories
-                    </button>
-
-                  <ul class="dropdown-menu">
-                      {% for category in categories %}
-                    <li><a class="dropdown-item" href="{% url 'category' category.id %}">{{ category.title }}</a></li>
-                      {% endfor %}
-                  </ul>
-                </div>
-            </li>
-
-      {# Testing Link DROPDOWN BUTTON #}
+        <li class="nav-item">
+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </li>
           <li class="nav-item">
-                <div class="dropdown">
-                    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        Testing Link
-                    </button>
-
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url 'profile_list' %}">Profile List</a></li>
-                    <li><a class="dropdown-item" href="{% url 'track_map' %}">Map</a></li>
-                      <li><a class="dropdown-item" href="{% url 'search_meep' %}">Search meep</a></li>
-                      <li><a class="dropdown-item" href="{% url 'search_user' %}">Search user</a></li>
-                      <li><a class="dropdown-item" href="{% url 'bug_report' %}">Bug Report</a></li>
-                      <li><a class="dropdown-item" href="{% url 'add_event' %}">Add Event</a></li>
-                      <li><a class="dropdown-item" href="#">Another action</a></li>
-                  </ul>
-                </div>
-          </li>
-
-      {% endif %}
+                <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+         </li>
 
       </ul>
 
-{#    RIGHT SIDE#}
+
+
+
+            RIGHT SIDE
 
         {% if user.is_authenticated %}
 
+
             <ul class="navbar-nav ml-auto">
-{#                <li class="nav-item">#}
-{#                    <strong><a class="nav-link" href="{% url 'profile' user.id %}">{{ request.user.username }}</a></strong>#}
-{#                </li>#}
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'profile' user.id %}">
-                        {% if user.profile.profile_image %}
-                            <img src="{{ user.profile.profile_image.url }}" width=35 height=35 class="rounded-circle" alt="{{ user.profile.user.username }}">
-                            <strong>{{ request.user.username }}</strong>
-                        {% else %}
-                            <img src="{% static 'img/default_avatar.jpg' %}" width=35 height=35 class="rounded-circle" alt="{{ user.profile.user.username }}">
-                            <strong>{{ request.user.username }}</strong>
-                        {% endif %}
-                    </a>
-                </li>
-
-
-{# DROPDOWN BUTTON Account #}
-
-                <div class="dropdown">
-                    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        Account
-                    </button>
-
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <strong>{{ request.user.username }} </strong>
+                  </a>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'profile' user.id %}">Profile</a></li>
-
-
                     <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>
-
                       <li>
                         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                       </li>
                   </ul>
-                </div>
-
-
-
-{#            <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">#}
-{#      <ul class="navbar-nav">#}
-{#        <li class="nav-item dropdown">#}
-{#          <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">#}
-{#            Account#}
-{#          </button>#}
-{#          <ul class="dropdown-menu dropdown-menu-dark">#}
-{#             <li><a class="dropdown-item" href="{% url 'profile' user.id %}">Profile</a></li>#}
-{#              <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>#}
-{#              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>#}
-{#          </ul>#}
-{#        </li>#}
-{#      </ul>#}
-{#    </div>#}
+                </li>
+                <a class="nav-link active" href="{% url 'profile' user.id %}">
+                    {% if user.profile.profile_image %}
+                        <img src="{{ user.profile.profile_image.url }}" width=35 height=35 class="rounded-circle" alt="{{ user.profile.user.username }}">
+                    {% else %}
+                        <img src="{% static 'img/default_avatar.jpg' %}" width=35 height=35 class="rounded-circle" alt="{{ user.profile.user.username }}">
+                    {% endif %}
+                </a>
+            </ul>
 
         {% else %}
 
@@ -144,14 +129,151 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'registration' %}">Reg</a>
+                    <a class="nav-link" href="{% url 'registration' %}">Registration</a>
                 </li>
-
             </ul>
 
         {% endif %}
-  </ul>
-    </div>
 
+    </div>
   </div>
 </nav>
+
+
+{##############################################################}
+
+
+{##}
+{#<nav class="navbar navbar-expand-lg navbar-dark bg-dark">#}
+{#  <div class="container-fluid">#}
+{#    <a class="navbar-brand" href="{% url 'home' %}">Musker</a>#}
+{#    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">#}
+{#      <span class="navbar-toggler-icon"></span>#}
+{#    </button>#}
+{#    <div class="collapse navbar-collapse" id="navbarSupportedContent">#}
+{#      <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
+{##}
+{#      {% if user.is_authenticated %}#}
+{##}
+{#        <li class="nav-item">#}
+{#          <a class="nav-link" href="{% url 'add_meeps' %}">Add meep</a>#}
+{#        </li>#}
+{##}
+{#        <li class="nav-item">#}
+{#          <a class="nav-link" href="{% url 'chat' %}">Chat</a>#}
+{#        </li>#}
+{##}
+{##}
+{#          <li class="nav-item">#}
+{#            <a class="nav-link" href="{% url 'direct' user.id %}">#}
+{#                {% if user.profile.new_messages %}#}
+{#                    Direct NM#}
+{#                {% else %}#}
+{#                    Direct#}
+{#                {% endif %}#}
+{#            </a>#}
+{#          </li>#}
+{##}
+{#      {% endif %}#}
+{##}
+{#        <li class="nav-item">#}
+{#          <a class="nav-link" href="{% url 'event_home' %}">Events</a>#}
+{#        </li>#}
+{##}
+{#      {% if user.is_authenticated %}#}
+{##}
+        {# CATEGORY DROPDOWN BUTTON #}
+{#            <li class="nav-item">#}
+{#                <div class="dropdown">#}
+{#                    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                        Categories#}
+{#                    </button>#}
+{##}
+{#                  <ul class="dropdown-menu">#}
+{#                      {% for category in categories %}#}
+{#                    <li><a class="dropdown-item" href="{% url 'category' category.id %}">{{ category.title }}</a></li>#}
+{#                      {% endfor %}#}
+{#                  </ul>#}
+{#                </div>#}
+{#            </li>#}
+{##}
+      {# Testing Link DROPDOWN BUTTON #}
+{#          <li class="nav-item">#}
+{#                <div class="dropdown">#}
+{#                    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                        Testing Link#}
+{#                    </button>#}
+{##}
+{#                  <ul class="dropdown-menu">#}
+{#                    <li><a class="dropdown-item" href="{% url 'profile_list' %}">Profile List</a></li>#}
+{#                    <li><a class="dropdown-item" href="{% url 'track_map' %}">Map</a></li>#}
+{#                      <li><a class="dropdown-item" href="{% url 'search_meep' %}">Search meep</a></li>#}
+{#                      <li><a class="dropdown-item" href="{% url 'search_user' %}">Search user</a></li>#}
+{#                      <li><a class="dropdown-item" href="{% url 'bug_report' %}">Bug Report</a></li>#}
+{#                      <li><a class="dropdown-item" href="{% url 'add_event' %}">Add Event</a></li>#}
+{#                      <li><a class="dropdown-item" href="#">Another action</a></li>#}
+{#                  </ul>#}
+{#                </div>#}
+{#          </li>#}
+{##}
+{#      {% endif %}#}
+{##}
+{#      </ul>#}
+{##}
+{#    RIGHT SIDE#}
+{##}
+{#        {% if user.is_authenticated %}#}
+{##}
+{#            <ul class="navbar-nav ml-auto">#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'profile' user.id %}">#}
+{#                        {% if user.profile.profile_image %}#}
+{#                            <img src="{{ user.profile.profile_image.url }}" width=35 height=35 class="rounded-circle" alt="{{ user.profile.user.username }}">#}
+{#                            <strong>{{ request.user.username }}</strong>#}
+{#                        {% else %}#}
+{#                            <img src="{% static 'img/default_avatar.jpg' %}" width=35 height=35 class="rounded-circle" alt="{{ user.profile.user.username }}">#}
+{#                            <strong>{{ request.user.username }}</strong>#}
+{#                        {% endif %}#}
+{#                    </a>#}
+{#                </li>#}
+{##}
+{##}
+{# DROPDOWN BUTTON Account #}
+{##}
+{#                <div class="dropdown">#}
+{#                    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                        Account#}
+{#                    </button>#}
+{##}
+{#                  <ul class="dropdown-menu">#}
+{#                    <li><a class="dropdown-item" href="{% url 'profile' user.id %}">Profile</a></li>#}
+{##}
+{##}
+{#                    <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>#}
+{##}
+{#                      <li>#}
+{#                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>#}
+{#                      </li>#}
+{#                  </ul>#}
+{#                </div>#}
+{##}
+{#        {% else %}#}
+{##}
+{#            <ul class="navbar-nav ml-auto">#}
+{##}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'login' %}">Login</a>#}
+{#                </li>#}
+{##}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'registration' %}">Reg</a>#}
+{#                </li>#}
+{##}
+{#            </ul>#}
+{##}
+{#        {% endif %}#}
+{#  </ul>#}
+{#    </div>#}
+{##}
+{#  </div>#}
+{#</nav>#}
